@@ -1,3 +1,7 @@
+# Variables
+
+- `$PSVersionTable`: version information
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.

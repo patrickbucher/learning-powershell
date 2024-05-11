@@ -38,6 +38,10 @@ Show help online (i.e. in a browser):
 
     Help -Online TOPIC
 
+Show example section of help:
+
+    Help -Example TOPIC
+
 List all commands:
 
     Get-Command

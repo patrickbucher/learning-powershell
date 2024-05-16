@@ -154,6 +154,87 @@ Wildcards (`*`: matching `0..n`, `?`: matching `0..1` characters) are supported 
     - no Unix equivalent
 - `Set-ItemProperty -Path dwm -PSProperty EnableAeroPeek -Value 0`: set `EnableAeroPeek` property of `dwm` registry key to `0`
 
+# Pipelines
+
+The _Pipe_ operator `|` in PowerShell can be used like its Unix Shell equivalent, but it forwards _objects_ rather than text.
+
+## Examples (with Unix eqiuvalents, if applicable)
+
+- `Get-ChildItem | Where-Object -Property Name -Eq 'README.md'`
+    - `ls | grep '^README.md$'`
+- `Get-ChildItem | Select-Object -Property Name`
+    - think of a combination of `ls -l` and `cut`
+    - alternative notation: `(Get-ChildItem).Name`
+- `Get-ChildItem -Path .\labs\ | Select-Object -First 2`
+    - `ls labs | head -2`
+
+## Exporting/Importing and Converting Data
+
+Several formats are allowed for `Export-*` and `Import-*` commands:
+
+- `Export-Csv`/`Import-Csv`: Comma Separated Values
+    - `-Delimiter ';'`: defines delimiter `;`
+- `Export-Clixml`/`Import-Clixml`: Serialized Objects as XML
+
+Use the `-IncludeTypeInformation` parameter to include type information, which allows for a nicely formatted output of an import later:
+
+    > Get-ChildItem -Path .\labs\ | Export-Csv -IncludeTypeInformation -Path labs.csv
+    > Import-Csv -Path labs.csv
+
+More formats are supported via the `ConvertTo` verb, e.g.:
+
+- `ConvertTo-Csv`
+- `ConvertTo-Html`
+- `ConvertTo-Json`
+- `ConvertTo-Xml`
+
+Examples:
+
+    > Get-Item -Path README.md | ConvertTo-Json
+    > Get-Item -Path README.md | ConvertTo-Html > readme.html
+
+Not the _content_ is converted, but the Item as a PowerShell object, mind you!
+
+## Output Redirection
+
+The default output goes _formatted_ to the screen:
+
+    > ... | Out-Default
+    > ... | Out-Host
+
+Without colors:
+
+    > ... | Out-String
+
+Discard output (equivalent to Unix: `> /dev/null`):
+
+    > ... | Out-Null
+
+Redirect to a file:
+
+    > Get-ChildItem > foo.txt
+    > Get-ChildItem | Out-File -Path foo.txt
+
+Unlike the `>` operator, the `Out-File` Cmdlet supports various parameters (e.g. encoding).
+
+## Confirmation
+
+Both the running PowerShell (`$ConfirmPreference`) and each Cmdlet have their own _impact level_:
+
+- If the Cmdlet's impact level is bigger/equal than the PowerShell's, the user is asked for confirmation.
+- Otherwise, the Cmdlet is executed without further ado.
+- Cmdlets support the `-Confirm` parameter to enforce confirmation.
+- The `-WhatIf` parameter let's the Cmdlet run in _dry mode_, just showing the impact the Cmdlet would cause.
+
+## Comparing Objects
+
+Compare the PID (process id) of the running Notepad and Bash process:
+
+    > Compare-Object -ReferenceObject (Get-Process -Name notepad) -DifferenceObject (Get-Process -Name bash) -Property Id
+
+- `<=`: only on the left side (`-ReferenceObject`)
+- `=>`: only on the right side (`-DifferenceObject`)
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.

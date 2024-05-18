@@ -235,6 +235,42 @@ Compare the PID (process id) of the running Notepad and Bash process:
 - `<=`: only on the left side (`-ReferenceObject`)
 - `=>`: only on the right side (`-DifferenceObject`)
 
+# Commands and Modules
+
+Commands can be added by installing _modules_. The module _PowerShellGet_ manages modules from online repositories ("Galleries"), e.g. [PowerShellGallery](https://www.powershellgallery.com/). Make sure to check the compatibility under the section _PSEditions_ (e.g. _Core_) for each module. Modules can not only add commands, but also providers.
+
+Repositories can be registered using the `Register-PSRepository` Cmdlet.
+
+Modules have a _prefix_, e.g. `Az` for the `Azure` module. This prefix is used in the nouns of commands to avoid name conflicts. (Use fully qualified paths, such as `Module\Cmdlet` in case of a conflict.)
+
+Modules are stored in one of the paths denoted by `$PSModulePath`.
+
+Install a Module (e.g. Azure):
+
+    > Install-Module -Name Az
+
+Check if the module was installed:
+
+    > Get-Module -Name Az -ListAvailable
+
+See `Update-Module` and `Remove-Module` for updating and removing a module, respectively.
+
+Import the module into the current PowerShell session, or do so with a custom prefix:
+
+    > Import-Module -Name Az
+    > Import-Module -Name Az -Prefix Cloud
+
+List the available commands (with paging):
+
+    > Get-Command -Noun Az* | Out-Host -Paging
+
+# Recipies
+
+Compressing and uncompressing archives:
+
+    > Compress-Archive -Path foo -DestinationPath foo.zip
+    > Expand-Archive -Path foo.zip -DestinationPath foo_copy
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.

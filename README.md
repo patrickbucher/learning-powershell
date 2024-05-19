@@ -14,11 +14,15 @@ Make sure to extend your path variable to find the `pwsh` binary (e.g. in `~/.ba
 
     export PATH="$PATH:~/.dotnet/tools"
 
-![How to Install PowerShell on Arch Linux](pics/install-powershell-on-arch-linux.png)
+Reload the environment variables:
+
+    $ source ~/.bashrc
 
 Start PowerShell:
 
     $ pwsh
+
+![How to Install PowerShell on Arch Linux](pics/install-powershell-on-arch-linux.png)
 
 # Help
 

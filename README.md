@@ -280,10 +280,11 @@ has a _value_.
 There are usually more properties than are being shown in the console output.
 (Pipe the result through a `ConvertTo-*` Cmdlet to see all properties.)
 
-Inspect the proprties of an object, e.g. the current `Directory` (works on
+Inspect the members of an object, e.g. the current `Directory` (works on
 single and multiple items):
 
     > Get-Item -Path . | Get-Member
+    > Get-Item -Path . | Get-Member -MemberType Property
 
 Members of the type _ScriptProperty_ are added dynamically by the running
 PowerShell process.
@@ -322,6 +323,10 @@ Compressing and uncompressing archives:
 Measure execution time:
 
     > Measure-Command { foobar.exe }
+
+Get the fully qualified type name of an object (e.g. a date):
+
+    > (Get-Date).GetType().FullName
 
 ## Variables
 

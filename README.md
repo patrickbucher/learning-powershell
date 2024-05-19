@@ -1,8 +1,16 @@
 Notes on _Learn PowerShell in a Month of Lunches_ (4th Edition)
 
-# Variables
+# Setup
 
-- `$PSVersionTable`: version information
+If .NET is already installed:
+
+    $ dotnet tool install --global powershell
+
+Make sure to extend your path variable to find the `pwsh` binary (e.g. in `~/.bashrc`):
+
+    export PATH="$PATH:~/.dotnet/tools"
+
+![How to Install PowerShell on Arch Linux](pics/install-powershell-on-arch-linux.png)
 
 # Help
 
@@ -243,8 +251,6 @@ Repositories can be registered using the `Register-PSRepository` Cmdlet.
 
 Modules have a _prefix_, e.g. `Az` for the `Azure` module. This prefix is used in the nouns of commands to avoid name conflicts. (Use fully qualified paths, such as `Module\Cmdlet` in case of a conflict.)
 
-Modules are stored in one of the paths denoted by `$PSModulePath`.
-
 Install a Module (e.g. Azure):
 
     > Install-Module -Name Az
@@ -270,6 +276,11 @@ Compressing and uncompressing archives:
 
     > Compress-Archive -Path foo -DestinationPath foo.zip
     > Expand-Archive -Path foo.zip -DestinationPath foo_copy
+
+# Variables
+
+- `$PSVersionTable`: version information
+- `PSModulePath`: paths where modules are stored
 
 # Miscellaneous
 

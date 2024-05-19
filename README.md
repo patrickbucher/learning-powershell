@@ -288,6 +288,24 @@ single and multiple items):
 Members of the type _ScriptProperty_ are added dynamically by the running
 PowerShell process.
 
+Collections of objects can be sorted by a property:
+
+    > Get-Process | Sort-Object -Property CPU
+    > Get-Process | Sort-Object -Property CPU,ID -Descending
+
+Properties can be extracted from objects:
+
+    > Get-Process | Select-Object -Property Name,ID,CPU
+
+Filter collections by the objects' properties:
+
+    > Get-Process | Where-Object -Property Name -Eq -Value dotnet
+    > Get-Process | Where-Object -Property Name -Like -Value pw*
+    > Get-Process | Where-Object -Property CPU -GT -Value 10
+
+The original objects (e.g. processes) are converted into generic `PSObject`
+instances by such commands, which come with their own rules for output.
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.
@@ -300,6 +318,10 @@ Compressing and uncompressing archives:
 
     > Compress-Archive -Path foo -DestinationPath foo.zip
     > Expand-Archive -Path foo.zip -DestinationPath foo_copy
+
+Measure execution time:
+
+    > Measure-Command { foobar.exe }
 
 ## Variables
 

@@ -270,20 +270,38 @@ List the available commands (with paging):
 
     > Get-Command -Noun Az* | Out-Host -Paging
 
-# Recipies
+# Objects
 
-Compressing and uncompressing archives:
+A Cmdlet like `Get-Processes` shows a _collection_ of processes as a table. Each
+table row represents an _object_ with various _members_—_properties_
+(information about them) and _methods_ (actions to run on them). Every property
+has a _value_.
 
-    > Compress-Archive -Path foo -DestinationPath foo.zip
-    > Expand-Archive -Path foo.zip -DestinationPath foo_copy
+There are usually more properties than are being shown in the console output.
+(Pipe the result through a `ConvertTo-*` Cmdlet to see all properties.)
 
-# Variables
+Inspect the proprties of an object, e.g. the current `Directory` (works on
+single and multiple items):
 
-- `$PSVersionTable`: version information
-- `PSModulePath`: paths where modules are stored
+    > Get-Item -Path . | Get-Member
+
+Members of the type _ScriptProperty_ are added dynamically by the running
+PowerShell process.
 
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.
 - Powershell 7.x is called "PowerShell" and has the binary `pwsh.exe` and a black background by default.
 - ISE: Integrated Scripting Environment (host application), outdated; use Visual Studio Code with the PowerShell extension instead
+
+## Recipies
+
+Compressing and uncompressing archives:
+
+    > Compress-Archive -Path foo -DestinationPath foo.zip
+    > Expand-Archive -Path foo.zip -DestinationPath foo_copy
+
+## Variables
+
+- `$PSVersionTable`: version information
+- `PSModulePath`: paths where modules are stored

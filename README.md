@@ -1,8 +1,12 @@
 Notes on _Learn PowerShell in a Month of Lunches_ (4th Edition)
 
-# Setup
+# Setup (Arch Linux)
 
-If .NET is already installed:
+Install the .NET Framework:
+
+    # pacman -S dotnet
+
+Install PowerShell as a .NET tool:
 
     $ dotnet tool install --global powershell
 
@@ -11,6 +15,10 @@ Make sure to extend your path variable to find the `pwsh` binary (e.g. in `~/.ba
     export PATH="$PATH:~/.dotnet/tools"
 
 ![How to Install PowerShell on Arch Linux](pics/install-powershell-on-arch-linux.png)
+
+Start PowerShell:
+
+    $ pwsh
 
 # Help
 

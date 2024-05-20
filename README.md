@@ -263,9 +263,9 @@ Repositories can be registered using the `Register-PSRepository` Cmdlet.
 
 Modules have a _prefix_, e.g. `Az` for the `Azure` module. This prefix is used in the nouns of commands to avoid name conflicts. (Use fully qualified paths, such as `Module\Cmdlet` in case of a conflict.)
 
-Install a Module (e.g. Azure):
+Install a Module (e.g. Azure, without confirmation prompt):
 
-    > Install-Module -Name Az
+    > Install-Module -Name Az -Force
 
 Check if the module was installed:
 
@@ -339,6 +339,16 @@ Measure execution time:
 Get the fully qualified type name of an object (e.g. a date):
 
     > (Get-Date).GetType().FullName
+
+### YAML
+
+Install a YAML module (`ConvertFrom-Yaml` and `ConvertTo-Yaml` Cmdlets):
+
+    > Install-Module -Name Powershell-YAML -Force
+
+Convert a YAML file to JSON:
+
+    > Get-Content foo.yaml | ConvertFrom-YAML | ConvertTo-Json -Depth 100
 
 ## Variables
 

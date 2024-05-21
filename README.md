@@ -255,6 +255,29 @@ Compare the PID (process id) of the running Notepad and Bash process:
 - `<=`: only on the left side (`-ReferenceObject`)
 - `=>`: only on the right side (`-DifferenceObject`)
 
+## Pipeline Parameter Binding
+
+When the result from `Left-Command` is piped into `Right-Command` (such as in
+`Left-Command | Right-Command`), PowerShell needs to figure out which parameter
+of `Right-Command` can accept the object produced by `Left-Command`, for which
+there are two strategies to be tried in the following order:
+
+1. `ByValue`: The type of the output object from `Left-Command` is matched to
+   the parameter types of `Right-Command`.
+2. `ByPropertyName`: The output object of `Left-Commands` has a property with
+   the same name as a parameter of `Right-Command` that accepts pipeline input
+   (see _Accept pipeline input?_ in the parameter's documentation).
+
+If neither works, use _parenthetical commands_ instead:
+
+    > Left-Command | Right-Command
+    ERROR
+    > Right-Command (Left-Command)
+    OK
+
+Use `Select-Object -ExpandProperty PROPERTY` to extract the content of a
+property from an output object.
+
 # Commands and Modules
 
 Commands can be added by installing _modules_. The module _PowerShellGet_ manages modules from online repositories ("Galleries"), e.g. [PowerShellGallery](https://www.powershellgallery.com/). Make sure to check the compatibility under the section _PSEditions_ (e.g. _Core_) for each module. Modules can not only add commands, but also providers.
@@ -321,9 +344,12 @@ instances by such commands, which come with their own rules for output.
 
 # Miscellaneous
 
-- Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.
-- Powershell 7.x is called "PowerShell" and has the binary `pwsh.exe` and a black background by default.
-- ISE: Integrated Scripting Environment (host application), outdated; use Visual Studio Code with the PowerShell extension instead
+- Powershell 5.1 is called "Windows PowerShell" and has the binary
+  `powershell.exe` and a blue background by default.
+- Powershell 7.x is called "PowerShell" and has the binary `pwsh.exe` and a
+  black background by default.
+- ISE: Integrated Scripting Environment (host application), outdated; use Visual
+  Studio Code with the PowerShell extension instead
 
 ## Recipies
 
@@ -350,7 +376,12 @@ Convert a YAML file to JSON:
 
     > Get-Content foo.yaml | ConvertFrom-YAML | ConvertTo-Json -Depth 100
 
+### Hash Tables
+
+    > @{name='Alice', age=37}
+
 ## Variables
 
 - `$PSVersionTable`: version information
-- `PSModulePath`: paths where modules are stored
+- `$PSModulePath`: paths where modules are stored
+- `$_`: piped-in object

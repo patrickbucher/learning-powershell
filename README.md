@@ -255,6 +255,29 @@ Compare the PID (process id) of the running Notepad and Bash process:
 - `<=`: only on the left side (`-ReferenceObject`)
 - `=>`: only on the right side (`-DifferenceObject`)
 
+## Pipeline Parameter Binding
+
+When the result from `Left-Command` is piped into `Right-Command` (such as in
+`Left-Command | Right-Command`), PowerShell needs to figure out which parameter
+of `Right-Command` can accept the object produced by `Left-Command`, for which
+there are two strategies to be tried in the following order:
+
+1. `ByValue`: The type of the output object from `Left-Command` is matched to
+   the parameter types of `Right-Command`.
+2. `ByPropertyName`: The output object of `Left-Commands` has a property with
+   the same name as a parameter of `Right-Command` that accepts pipeline input
+   (see _Accept pipeline input?_ in the parameter's documentation).
+
+If neither works, use _parenthetical commands_ instead:
+
+    > Left-Command | Right-Command
+    ERROR
+    > Right-Command (Left-Command)
+    OK
+
+Use `Select-Object -ExpandProperty PROPERTY` to extract the content of a
+property from an output object.
+
 # Commands and Modules
 
 Commands can be added by installing _modules_. The module _PowerShellGet_ manages modules from online repositories ("Galleries"), e.g. [PowerShellGallery](https://www.powershellgallery.com/). Make sure to check the compatibility under the section _PSEditions_ (e.g. _Core_) for each module. Modules can not only add commands, but also providers.
@@ -319,11 +342,65 @@ Filter collections by the objects' properties:
 The original objects (e.g. processes) are converted into generic `PSObject`
 instances by such commands, which come with their own rules for output.
 
+# Formatting
+
+Formatting options are configured in `*.format.ps1xml` files within the
+PowerShell installation folder `$PSHome`. The `PSReadLine.format.ps1xml`
+contains basic configuration of the shell (do not edit it, it's digitally
+signed).
+
+The Cmdlet `Get-FormatData` shows mappings of `TypeNames` to
+`FormatViewDefinition`. Use the `Update-TypeData` Cmdlet to add definitions,
+using the `-Path` parameter to specify an XML file containing the custom
+format rules.
+
+Cmdlets with the `Out` don't work with standard objects, but pass them to the
+formatting system for conversion.
+
+Objects with up to four properties are displayed as a table. If more properties
+are to be formatted, they are shown as a list of key-value pairs. (Note that the
+table headers may differ from property names.)
+
+For better control of the output, use the `Format-*` Cmdlets:
+
+1. `Format-Table`: tabular output
+    - `-Property`: specify the output columns
+        - `Get-Process | Format-Table -Property Name,CPU,VM`
+    - `-GroupBy`: show multiple tables grouped by a property (the input should
+      already be sorted by that particular property)
+        - `Get-Process | Sort-Object -Property PriorityClass | Format-Table -GroupBy PriorityClass`
+    - `-Wrap`: wrap cell content instead of abridging it with an ellipsis (`…`)
+2. `Format-List`: list output
+3. `Format-Wide`: output list items with single property in multiple columns
+    - `-Col`: number of columns
+        - `Get-Process | Format-Wide -Property Name -Col 5`
+
+Make sure the `Format-` Cmdlet is the last one in the pipeline (except for an
+additional `Out-` Cmdlet); processing formatted input will cause trouble
+otherwise.
+
+Do not mix up multiple kinds of objects when formatting, unless respective
+formatting rules have been put in place.
+
+Use hash tables to map custom headers to columns (e.g. the `Id` property of the
+process to the header `PID`):
+
+    > Get-Process | Format-Table -Property Name,@{name='PID',expression={$_.Id}},CPU
+
+The hash table accepts additional properties such as `formatstring` and `align`.
+
+For graphical output, use the `Out-GridView` Cmdlet from the
+`Microsoft.PowerShell.GraphicalTools` module.
+
+
 # Miscellaneous
 
-- Powershell 5.1 is called "Windows PowerShell" and has the binary `powershell.exe` and a blue background by default.
-- Powershell 7.x is called "PowerShell" and has the binary `pwsh.exe` and a black background by default.
-- ISE: Integrated Scripting Environment (host application), outdated; use Visual Studio Code with the PowerShell extension instead
+- Powershell 5.1 is called "Windows PowerShell" and has the binary
+  `powershell.exe` and a blue background by default.
+- Powershell 7.x is called "PowerShell" and has the binary `pwsh.exe` and a
+  black background by default.
+- ISE: Integrated Scripting Environment (host application), outdated; use Visual
+  Studio Code with the PowerShell extension instead
 
 ## Recipies
 
@@ -340,6 +417,10 @@ Get the fully qualified type name of an object (e.g. a date):
 
     > (Get-Date).GetType().FullName
 
+Find the full command name of an alias (e.g. `cd`):
+
+    > Get-Alias | Where-Object -Property Name -Like -Value cd*
+
 ### YAML
 
 Install a YAML module (`ConvertFrom-Yaml` and `ConvertTo-Yaml` Cmdlets):
@@ -350,7 +431,13 @@ Convert a YAML file to JSON:
 
     > Get-Content foo.yaml | ConvertFrom-YAML | ConvertTo-Json -Depth 100
 
+### Hash Tables
+
+    > @{name='Alice', age=37}
+
 ## Variables
 
 - `$PSVersionTable`: version information
-- `PSModulePath`: paths where modules are stored
+- `$PSModulePath`: paths where modules are stored
+- `$_`: piped-in object
+- `$PSHome`: installation folder

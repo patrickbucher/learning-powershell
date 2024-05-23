@@ -392,6 +392,28 @@ The hash table accepts additional properties such as `formatstring` and `align`.
 For graphical output, use the `Out-GridView` Cmdlet from the
 `Microsoft.PowerShell.GraphicalTools` module.
 
+# Filtering & Comparison
+
+Results can be filtered either _left_ by instructing the Cmdlet to do so by
+various properties (e.g. `-Name`), or _right_ by filtering the output of a
+Cmdlet through an additional piped Cmdlet. _Filter left_ or _early filtering_ is
+usually more efficient and therefore should be preferred to _filter right_.
+
+The `Where-Object` (aliased as `where`) offers powerful filtering facilities
+with its `-FilterScript` (positional) parameter, which can be applied to the
+piped-in object, referred to as `$_`:
+
+- `-Eq`: test for equality
+- `-Ne`: test for inequality
+- `-Gt`/`-Lt`: greater/less than
+- `-Ge`/`-Le`: greater/less than or equal to
+- `-Ceq`, `-Cne`, `-Cgt`, `-Clt`, `-Cge`, `-Cle`: case-sensitive variants of
+  above parameters for string comparisons
+- `-Like`/`-NotLike`: pattern matching (`*`, `?`, etc.)
+- `-CLike`/`-CNotLike`: pattern matching, but case-sensitive
+- `-Match`/`-NotMatch`: matching against a regular expression
+- `-CMatch`/`-CNotMatch`: case sensitive matching against a regular expression
+- `-And`/`-Or`/`-Not`: logical operations to combine or negate expressions
 
 # Miscellaneous
 

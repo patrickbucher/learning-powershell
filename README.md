@@ -4,7 +4,7 @@ Notes on _Learn PowerShell in a Month of Lunches_ (4th Edition)
 
 Install the .NET Framework:
 
-    # pacman -S dotnet
+    # pacman -S dotnet-sdk
 
 Install PowerShell as a .NET tool:
 

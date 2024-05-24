@@ -415,6 +415,22 @@ piped-in object, referred to as `$_`:
 - `-CMatch`/`-CNotMatch`: case sensitive matching against a regular expression
 - `-And`/`-Or`/`-Not`: logical operations to combine or negate expressions
 
+# Remoting
+
+    Invoke-Command -ComputerName
+
+protocol: WSMan (Web Services for Management) via HTTP/HTTPS, run by Windows
+Remote Management (WinRM) for Windows; SSH for Linux and macOS
+
+objects are serialized/deserialized through XML over the network;
+methods/actions are not supported by them
+
+PowerShell Remoting Protocol (PSRP): over SSH (Linux), doesn't work...
+
+    Install-Module EnableSSHRemoting
+
+TODO: try out on two Windows machines
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary

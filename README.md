@@ -342,6 +342,18 @@ Filter collections by the objects' properties:
 The original objects (e.g. processes) are converted into generic `PSObject`
 instances by such commands, which come with their own rules for output.
 
+## Batch Cmdlets
+
+Many Cmdlets (_Batch Cmdlets_) can deal with multiple inputs.
+
+As the left command's output is consumed by the right command, it needs to be
+explicitly passed through in order to become visible using the `-PassThru`
+parameter:
+
+    > Get-ChildItem folder | Copy-Item -Destination backup -PassThru
+
+Other Cmdlets can only deal with single inputs, and therefore need
+
 # Formatting
 
 Formatting options are configured in `*.format.ps1xml` files within the

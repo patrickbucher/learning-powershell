@@ -352,7 +352,35 @@ parameter:
 
     > Get-ChildItem folder | Copy-Item -Destination backup -PassThru
 
-Other Cmdlets can only deal with single inputs, and therefore need
+## Enumeration
+
+Other Cmdlets can only deal with single inputs, and therefore the objects need
+to be _enumerated_. This could either happen by the means of scripting, or by
+using specialized Cmdlets. Consider a file containing patterns (`patterns.txt`):
+
+    *.toml
+    *.rs
+    *.md
+
+In order to filter the file names for _all_ those patterns, the `ForEach-Object`
+Cmdlet can be used to enumerate them, invoking the `Get-ChildItem` Cmdlet in a
+script block with every pattern, referred as `$_`:
+
+    > Get-Content patterns.txt | ForEach-Object -Process { Get-ChildItem-Recurse ~/projects -Name $_ }
+
+Instead of the (positional) `-Process` parameter, use `-Parallel` to execute the
+script block concurrently:
+
+    > Get-Content patterns.txt | ForEach-Object -Parallel { Get-ChildItem-Recurse ~/projects -Name $_ }
+
+To measure execution time, surround the entire line in a script block, to be
+called with `Measure-Command`:
+
+    > Measure-Command { Get-Content … }
+
+By default, no more than 5 processes are run in parallel. Use `-ThrottleLimit X`
+to set the upper limit to `X`, for which the number of supported CPU threads is
+a good setting.
 
 # Formatting
 

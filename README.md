@@ -278,7 +278,7 @@ If neither works, use _parenthetical commands_ instead:
     OK
 
 Use `Select-Object -ExpandProperty PROPERTY` to extract the content of a
-property from an output object.
+property (i.e. its value) from an output object.
 
 # Commands and Modules
 

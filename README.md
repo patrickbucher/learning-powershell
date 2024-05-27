@@ -553,6 +553,25 @@ Convert a YAML file to JSON:
 
     > @{name='Alice', age=37}
 
+### Windows Cleanup
+
+Open PowerShell as Admin.
+
+Load the `Appx` module:
+
+    > Import-Module -Name Appx -UseWindowsPowerShell
+
+List the names of installed Appx packages:
+
+    > Get-AppxPackage -AllUsers | Select-Object -Property Name
+
+Uninstall the worst offenders:
+
+    > Remove-AppxPackage -Name *Xbox* | Remove-AppxPackage
+    > Remove-AppxPackage -Name *Zune* | Remove-AppxPackage
+    > Remove-AppxPackage -Name *YourPhone* | Remove-AppxPackage
+    > Remove-AppxPackage -Name *Skype* | Remove-AppxPackage
+
 ## Variables
 
 - `$PSVersionTable`: version information

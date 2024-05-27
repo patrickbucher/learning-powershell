@@ -496,19 +496,20 @@ piped-in object, referred to as `$_`:
 
 # Remoting
 
-    Invoke-Command -ComputerName
+A PowerShell Cmdlet can be executed on a remote computer `HOSTNAME` as follows:
 
-protocol: WSMan (Web Services for Management) via HTTP/HTTPS, run by Windows
-Remote Management (WinRM) for Windows; SSH for Linux and macOS
+    Invoke-Command -ComputerName HOSTNAME
 
-objects are serialized/deserialized through XML over the network;
-methods/actions are not supported by them
+On Windows, remoting works over WSMan (Web Services for Management) via
+HTTP/HTTPS, run by Windows Remote Management (WinRM) for Windows.
 
-PowerShell Remoting Protocol (PSRP): over SSH (Linux), doesn't work...
+On Linux and macOS, remoting works over SSH.
 
-    Install-Module EnableSSHRemoting
+Objects are serialized/deserialized through XML over the network; therefore,
+methods/actions are not supported, but all data can be inspected on a remote
+computer.
 
-TODO: try out on two Windows machines
+TODO: 13.2 (p. 159), do everything on localhost or from Windows -> Linux?
 
 # Miscellaneous
 

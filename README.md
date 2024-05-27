@@ -264,9 +264,11 @@ there are two strategies to be tried in the following order:
 
 1. `ByValue`: The type of the output object from `Left-Command` is matched to
    the parameter types of `Right-Command`.
-2. `ByPropertyName`: The output object of `Left-Commands` has a property with
+2. `ByPropertyName`: The output object of `Left-Command` has a property with
    the same name as a parameter of `Right-Command` that accepts pipeline input
-   (see _Accept pipeline input?_ in the parameter's documentation).
+   (see _Accept pipeline input?_ in the parameter's documentation). If there are
+   multiple matching properties, all of them are used to exchange data from
+   `Left-Command` to `Right-Command`.
 
 If neither works, use _parenthetical commands_ instead:
 
@@ -304,6 +306,43 @@ Import the module into the current PowerShell session, or do so with a custom pr
 List the available commands (with paging):
 
     > Get-Command -Noun Az* | Out-Host -Paging
+
+## Working with the Azure Module
+
+Connect to an Azure account (opens browser):
+
+    > Connect-AzAccount
+
+If you have multiple subscriptions, use the `Select-AzSubscription` Cmdlet with
+the `-SubscriptionName` parameter to pick one.
+
+If you only have a single subscription, set it as the active context:
+
+    > Get-AzSubscription | Select-Object Property Id | Set-AzContext
+
+Register a resource provider for storage:
+
+    > Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
+
+Get information about available locations:
+
+    > Get-AzLocation | Select-Object -Property Location,DisplayName,Type,PhysicalLocation
+
+Query existing resource groups within a location:
+
+    > Get-AzResourceGroup -Location switzerlandnorth
+
+Create a new resource group called `test`, if none exists:
+
+    > New-AzResourceGroup -Location switzerlandnorth -Name test
+
+Create a new storage account:
+
+    > New-AzStorageAccount -ResourceGroupName test -Name patrickbucher -SkuName Standard_ZRS -Location switzerlandnorth
+
+Remove a storage account (without confirmation):
+
+    > Remove-AzStorageAccount -Name patrickbucher -ResourceGroupName test -Force
 
 # Objects
 

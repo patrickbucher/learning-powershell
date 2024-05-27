@@ -14,7 +14,7 @@
 
 ## 4
 
-    TODO: need azure storage containers
+    > Get-AzStorageAccount | Get-AzStorageContainer | Format-Table -GroupBy PublicAccess
 
 ## 5
 

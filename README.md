@@ -509,7 +509,9 @@ Objects are serialized/deserialized through XML over the network; therefore,
 methods/actions are not supported, but all data can be inspected on a remote
 computer.
 
-TODO: 13.2 (p. 159), do everything on localhost or from Windows -> Linux?
+TODO: continue with chapter 13 (13.2, p. 159)
+
+- PSRP: PowerShell Remoting Protocol
 
 # Miscellaneous
 

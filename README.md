@@ -513,6 +513,83 @@ TODO: continue with chapter 13 (13.2, p. 159)
 
 - PSRP: PowerShell Remoting Protocol
 
+# Multitasking and Background Jobs
+
+PowerShell commands are executed synchronuously, i.e. the shell is blocked until
+a command has finished its execution. However, commands can be moved into the
+background for asynchronuous execution, allowing the user to interact with the
+shell while another command is executing. Only commands running synchronuously
+can be interactive; commands running asynchronuously must be provided with all
+required input as they are run.
+
+Commands running the background are referred to as _jobs_.
+
+Start a job (with a custom name):
+
+    > Start-Job -ScriptBlock { Get-Date | Out-File -Path date.txt }
+    > Start-Job -Name WriteDateJob -ScriptBlock { Get-Date | Out-File -Path date.txt }
+
+Specify `-FilePath` instead of `-ScriptBlock` to run a script from a file. The
+`-WorkingDirectory` can also be specified.
+
+A job is run in its own process. The `Start-ThreadJob` Cmdlet runs a script in a
+separate thread within the current process:
+
+    > Start-ThreadJob -ScriptBlock { Get-Date | Out-File -Path date.txt }
+
+By default, no more thread jobs than 10 can be run. Pass the `-ThrottleLimit`
+parameter to the `Start-ThreadJob` Cmdlet to override this limit.
+
+Thread jobs start up faster and have less overhead than regular jobs, but slow
+down the current shell process. Use thread jobs for short-lived, quick tasks;
+use regular jobs for long-running, heavy tasks.
+
+To start jobs remotely, use the `Invoke-Command` Cmdlet together with the
+`-AsJob` (and optionally the `-JobName`) parameter. Many other Cmdlets, such as
+`New-AzVM`, support the `-AsJob` parameter, too.
+
+The current shell's jobs can be listed using the `Get-Job` Cmdlet. Pass the
+`-Id` parameter to see the job details:
+
+    > Get-Job -Id 1 | Format-List
+
+The output of a job can be received using the `Receive-Job` Cmdlet. This output
+will be consumed, unless the `-Keep` parameter is specified.
+
+    > Start-Job -ScriptBlock { Write-Output "Hello, Job!" } | Select-Object -Property Id
+    12
+    > Receive-Job -Id 12 -Keep
+    Hello, Job!
+    > Receive-Job -Id 12
+    Hello, Job!
+    > Receive-Job -Id 12
+    [nothing]
+
+A job that started other jobs refers to them in its `ChildJobs` property. Those
+jobs can be inspected by their name:
+
+    > Get-Job -Id 7 | Select-Object -Property ChildJobs
+    {Job8}
+    > Get-Job -Name Job8
+
+Use the following Cmdlets to manage jobs:
+
+- `Remove-Job`: delete a job
+- `Stop-Job`: terminate a stuck job
+- `Wait-Job`: move a running job back to the foreground
+
+Remove all completed jobs:
+
+    > Get-Job | Where-Object -Property State -Eq -Value Completed | Remove-Job
+
+Stop all blocked jobs:
+
+    > Get-Job | Where-Object -Property State -Eq -Value Blocked | Stop-Job
+
+Await all pending jobs:
+
+    > Get-Job | Wait-Job
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary

@@ -601,8 +601,8 @@ Values can be stored in variables, prefixed with a sigil (`$`):
 
     > $name = "Joe"
 
-Variable names can constist of letters, numbers, underscores, and even spaces,
-for which the name has to be written in curly braces:
+Variable names can constist of letters, numbers, underscores, and even—god
+forbid—spaces, for which the name has to be written in curly braces:
 
     > ${full name} = "Joe Doe"
     > Write-Output ${full name}
@@ -665,6 +665,46 @@ PowerShell _unrolls_ the access to the elements of the collection:
     CHARLENE
 
 ![Talking about type systems…](pics/seriously.png)
+
+Variables can be coerced into types, e.g. when reading input interactively from
+the user using the `Read-Host` Cmdlet:
+
+    > $name = Read-Host "Name"
+    Name: Joe
+    > [int]$age = Read-Host "Age"
+    Age: 13
+
+Unlike the string `$name`, `$age` can be used for arithmetic:
+
+    > $name * 3
+    JoeJoeJoe
+    $ $age * 3
+    39
+
+The variable `$name` has the type `System.String`, whereas `$age` was coerced
+into `System.Int32`.
+
+An error will be thrown if the coercion doesn't work:
+
+    > [int]$age = Read-Host "Weight"
+    Weight: average
+    MetadataError: Cannot convert value "average" to type "System.Int32"
+
+Commonly used types are:
+
+- `[int]`: integer numbers
+- `[single]` and `[double]`: single and double precision floating point numbers
+- `[string]`: strings of characters
+- `[char]`: a single character
+- `[xml]`: an XML document
+
+Variables can also be dealt with using the following Cmdlets:
+
+- `New-Variable`
+- `Set-Variable`
+- `Remove-Variable`
+- `Get-Variable`
+- `Clear-Variable`
 
 ## Common Variables
 

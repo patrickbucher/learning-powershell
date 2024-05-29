@@ -590,6 +590,89 @@ Await all pending jobs:
 
     > Get-Job | Wait-Job
 
+# Variables
+
+The `Get-Member` Cmdlet shows the `TypeName` of an object:
+
+    > Write-Output "hello" | Get-Member
+    TypeName: System.String
+
+Values can be stored in variables, prefixed with a sigil (`$`):
+
+    > $name = "Joe"
+
+Variable names can constist of letters, numbers, underscores, and even spaces,
+for which the name has to be written in curly braces:
+
+    > ${full name} = "Joe Doe"
+    > Write-Output ${full name}
+    Joe Doe
+
+Variables are expanded within double quotes, but not so within single quotes:
+
+    > $now = (Get-Date)
+    > Write-Output 'now is $now'
+    now is $now
+    > Write-Output "now is $now"
+    now is 05/29/2024 21:48:57
+
+The backtick can be used as an escape character, e.g. to escape the sigil, and
+to encode characters such as tabs or newline:
+
+    > Write-Output "`$now`tis`n$now"
+    $now	is
+    05/29/2024 21:48:57
+
+Variables can store multiple items when assigned a comma-separated list, which
+are stored as arrays with a zero-based index (0 is the first, -1 the last
+element):
+
+    > Write-Output $names
+    Alice
+    Bob
+    Charlene
+    > Write-Output $names[0]
+    Alice
+    > Write-Output $names[-1]
+    Charlene
+    > Write-Output $names.Count
+    3
+
+Use a _subexpression_ `$()` for advanced expansion within double quotes:
+
+    > Write-Output "The first name is $($names[0])"
+    The first name is Alice
+
+Properties and methods can be accessed directly on the variable:
+
+    > $drink = 'Beer'
+    > $drink.Replace('ee', 'ie')
+    Bier
+
+Arrays can be enumerated using the `ForEach-Object` Cmdlet:
+
+    > $names | ForEach-Object { $_.ToUpper() }
+    ALICE
+    BOB
+    CHARLENE
+
+If a member isn't found on the collection itself but on the individual items,
+PowerShell _unrolls_ the access to the elements of the collection:
+
+    > $names.ToUpper()
+    ALICE
+    BOB
+    CHARLENE
+
+![Talking about type systems…](pics/seriously.png)
+
+## Common Variables
+
+- `$PSVersionTable`: version information
+- `$PSModulePath`: paths where modules are stored
+- `$_`: piped-in object
+- `$PSHome`: installation folder
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary
@@ -650,10 +733,3 @@ Uninstall the worst offenders:
     > Remove-AppxPackage -Name *Zune* | Remove-AppxPackage
     > Remove-AppxPackage -Name *YourPhone* | Remove-AppxPackage
     > Remove-AppxPackage -Name *Skype* | Remove-AppxPackage
-
-## Variables
-
-- `$PSVersionTable`: version information
-- `$PSModulePath`: paths where modules are stored
-- `$_`: piped-in object
-- `$PSHome`: installation folder

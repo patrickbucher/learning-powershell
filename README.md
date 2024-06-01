@@ -817,6 +817,20 @@ List the names of installed Appx packages:
 
     > Get-AppxPackage -AllUsers | Select-Object -Property Name
 
+### Activate Unicode Input via Registry
+
+Switch to the registry (`HKEY_CURRENT_USER`):
+
+    > Set-Location -Path hkcu:
+
+Show input method entries:
+
+    > Get-ChildItem '.\Control Panel\Input Method\'
+
+If `EnableHexNumpad` is not yet set to `1`, set it accordingly (use `-Type String` to get a `REG_SZ` value):
+
+    > Set-ItemProperty -Path '.\Control Panel\Input Method\' -PSProperty EnableHexNumpad -Value 1 -Type String
+
 Uninstall the worst offenders:
 
     > Remove-AppxPackage -Name *Xbox* | Remove-AppxPackage

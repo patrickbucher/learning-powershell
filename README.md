@@ -713,6 +713,56 @@ Variables can also be dealt with using the following Cmdlets:
 - `$_`: piped-in object
 - `$PSHome`: installation folder
 
+# Input and Output
+
+Interactive input can be obtained using the `Read-Host` Cmdlet:
+
+    > $input = Read-Host -Prompt "What's your name?"
+
+Output can be produced using the `Write-Host` Cmdlet:
+
+    > Write-Host -Object "Hello, World!"
+
+Foreground and background colors can be specified:
+
+    > Write-Host -ForegroundColor red -BackgroundColor yellow -Object "Nice!"
+
+Use the `Write-Verbose` Cmdlet for messages that are not crucial for the user,
+which is only displayed if the `$VerbosePreference` variable is set to
+`"Continue"`:
+
+    > $VerbosePreference = "Continue"
+    > Write-Verbose -Message "ok, fine
+    VERBOSE: ok, fine
+
+The same mechanism works for the `Write-Warning` Cmdlet in accordance with the
+`$WarningPreference` variable.
+
+`Write-Host` sends objects to the output, whereas `Write-Output` sends objects
+to the pipe:
+
+    > Write-Host -InputObject "Hello"
+    Hello
+    > Write-Host -InputObject "Hello" | Select-Object -First 1
+    Hello
+    > Write-Host -InputObject "Hello" | Select-Object -First 0
+    [nothing]
+    > Write-Host -Object "Hello" | Select-Object -First 0
+    Hello
+
+There are a couple of `Write-*` Cmdlets with according variables (and default
+values) that deal with different kinds of messages:
+
+- `Write-Warning` with `$WarningPreference` (default: `Continue`)
+- `Write-Verbose` with `$VerbosePreference` (default: `SilentlyContinue`)
+- `Write-Debug` with `$DebugPreference` (default: `SilentlyContinue`)
+- `Write-Error` with `$ErrorActionPreference` (default: `Continue`)
+- `Write-Information` with `$InformtionPreference` (default: `SilentlyContinue`)
+
+The value `Continue` produces, whereas `SilentlyContinue` suppresses output.
+
+The `Write-Progress` Cmdlet can display progress bars.
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary

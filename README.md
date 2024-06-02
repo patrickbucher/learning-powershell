@@ -763,6 +763,47 @@ The value `Continue` produces, whereas `SilentlyContinue` suppresses output.
 
 The `Write-Progress` Cmdlet can display progress bars.
 
+# Scripting
+
+## Documentation and Parametrized Scripts
+
+Define documentation for the script within `<#` and `#>`. Define parameters for
+the script within a `param` block (`examples/Say-Hello.ps1`):
+
+```powershell
+<#
+.SYNOPSIS
+Say-Hello greets the user.
+.DESCRIPTION
+The user is greeted with the string "Hello", followed by either the provided
+name, or by the name "Anonymous.
+.PARAMETER Name
+The name of the user to be greeted. Default: Anonymous.
+#>
+Param (
+    $Name = 'Anonymouns'
+)
+Write-Host -Message "Hello, $Name."
+```
+
+Usage:
+
+    > Say-Hello
+    Hello, Anonymouns.
+    > Say-Hello -Name Joe
+    Hello, Joe.
+
+## Best Practices
+
+- Pick variable names similar to the parameters they are being used for. (E.g.
+  `$path` to be used with `-Path`.)
+- For command sequences connected by pipes, insert a newline after the pipe for
+  better readability and shorter lines.
+- Escape line breaks now following pipes with the backtick character.
+- Write out the full command an parameter names instead of relying on aliases,
+  abbreviations, and positional parameters. This will render the script easier
+  readable.
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary

@@ -871,6 +871,33 @@ Usage:
 - Prefer object output over pre-formatted output, for it makes the processing of
   the script's result easier downstream.
 
+# Regular Expressions
+
+Use `-Match` and its case-sensitive counterpart `-CMatch` to test a value
+against a regular expression (e.g. to check if could be an IP address):
+
+    > "127.0.0.1" -Match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    True
+    > "1.2.3.4" -Match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    True
+    > "localhost" -Match '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    False
+
+Provide the `Select-String` Cmdlet with a regex `-Pattern`:
+
+    $pattern = "(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})"
+    $ip = "127.0.0.1"
+    > (Select-String -InputObject $ip -Pattern $pattern).Matches.Groups |
+    >> Select-Object -Property Value
+
+    Value
+    -----
+    127.0.0.1
+    127
+    0
+    0
+    1
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary

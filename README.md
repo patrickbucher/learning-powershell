@@ -793,6 +793,71 @@ Usage:
     > Say-Hello -Name Joe
     Hello, Joe.
 
+## Advanced Scripts
+
+Use the `[CmdletBinding()]` attribute as the first line (after the
+documentation) for the script to unlock various features, such as automatic
+parameters like `-Verbose`, which enable verbose output of the `Write-Verbose`
+Cmdlet regardless of the `$VerbosePreference` setting.
+
+Use the `[Parameter]` attribute for various purposes:
+
+- `[Parameter(Mandatory=$True)]`: Prompts the user interactively for the
+  respective parameter if it isn't provided on the command line.
+- `[Parameter(HelpMessage="…")]`: Provides a help message for the respective
+  parameter.
+
+The `[Alias('Foo')]` attribute allows to use `Foo` as an alternative name for
+the respective parameter.
+
+A set of valid values (e.g. `1`, `2`, and `3`) can be provided using the
+`[ValidateSet(1,2,3)]` attribute.
+
+Example (`examples/Do-AdvancedStuff.ps1`):
+
+```powershell
+<#
+.SYNOPSIS
+Demonstrate advanced scripting features.
+.DESCRIPTION
+Prompts for the FirstName and a Choice of flavour, which will be printed.
+.PARAMETER FirstName
+The first name of the user picking a flavour.
+.PARAMETER Choice
+The flavour of the user's choice: 1 for chocolat, 2 for strawberry, and 3 for banana.
+.EXAMPLE
+Do-AdvancedStuff -Name Joe -Choice 1
+#>
+[CmdletBinding()]
+Param (
+    [Alias('Name')]
+    [Parameter(Mandatory=$True, HelpMessage="The name of the subject at the keyboard.")]
+    [string]$FirstName,
+
+    [ValidateSet(1,2,3)]
+    [Parameter(Mandatory=$True, HelpMessage="1) chocolat, 2) strawberry, 3) banana")]
+    [int]$Choice
+)
+
+Write-Verbose -Message "Entering…"
+Write-Host -Message "You are $FirstName and like option $Choice."
+Write-Verbose -Message "Exiting…"
+```
+
+Usage:
+
+    > ./Do-AdvancedStuff.ps1 -FirstName Joe -Choice 1
+    You are Joe and like option 1.
+    > ./Do-AdvancedStuff.ps1 -Name Joe -Choice 1
+    > ./Do-AdvancedStuff.ps1
+    FirstName: Jane
+    Choice: 2
+    You are Jane and like option 2.
+    > ./Do-AdvancedStuff.ps1 -Name Jack -Choice 3 -Verbose
+    VERBOSE: Entering…
+    You are Jack and like option 3.
+    VERBOSE: Exiting…
+
 ## Best Practices
 
 - Pick variable names similar to the parameters they are being used for. (E.g.
@@ -803,6 +868,8 @@ Usage:
 - Write out the full command an parameter names instead of relying on aliases,
   abbreviations, and positional parameters. This will render the script easier
   readable.
+- Prefer object output over pre-formatted output, for it makes the processing of
+  the script's result easier downstream.
 
 # Miscellaneous
 

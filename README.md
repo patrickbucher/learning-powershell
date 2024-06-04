@@ -806,6 +806,10 @@ Use the `[Parameter]` attribute for various purposes:
   respective parameter if it isn't provided on the command line.
 - `[Parameter(HelpMessage="…")]`: Provides a help message for the respective
   parameter.
+- `[Parameter(ValueFromPipeline=$True)]`: Accept values from piped-in objects
+  for this parameter.
+- `[Parameter(ValueFromPipelineByPropertyName=$True)]`: Match piped-in object's
+  property by name for this parameter.
 
 The `[Alias('Foo')]` attribute allows to use `Foo` as an alternative name for
 the respective parameter.

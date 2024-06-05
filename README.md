@@ -862,6 +862,58 @@ Usage:
     You are Jack and like option 3.
     VERBOSE: Exiting…
 
+## Loops
+
+Loop over a range of values:
+
+    > foreach ($i in 1..5) { Write-Host $i }
+    1
+    2
+    3
+    4
+    5
+
+For use within a pipeline, use the `Foreach-Object` Cmdlet (or its alias `%`):
+
+    > 1..5 | ForEach-Object { Write-Host $_ }
+    1
+    2
+    3
+    4
+    5
+
+Use the `-Parallel` parameter to process the elements concurrently (output
+non-deterministic):
+
+    > 1..5 | ForEach-Object -Parallel { Write-Host $_ }
+    1
+    3
+    2
+    4
+    5
+
+The level of parallel processing (default: 5) can be modified using the
+`-ThrottleLimit` parameter.
+
+Use `while` to loop as long as a condition holds true:
+
+    > $i = 0
+    > while ($i -LT 5) { $i++; Write-Host $i }
+    1
+    2
+    3
+    4
+    5
+
+Use `do`/`while` to loop with a condition at the end, running at least once:
+
+    > [int]$secret = 3
+    > do { [int]$guess = Read-Host "Guess" } while ($guess -NE $secret)
+    Guess: 4
+    Guess: 1
+    Guess: 2
+    Guess: 3
+
 ## Best Practices
 
 - Pick variable names similar to the parameters they are being used for. (E.g.
@@ -921,6 +973,10 @@ Compressing and uncompressing archives:
 Measure execution time:
 
     > Measure-Command { foobar.exe }
+
+Wait a while:
+
+    > Start-Sleep -Seconds 3
 
 Get the fully qualified type name of an object (e.g. a date):
 

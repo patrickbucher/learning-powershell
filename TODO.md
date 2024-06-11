@@ -7,3 +7,4 @@
 - Lab of Chapter 21: exercise 4 on a Windows computer
 - Lab of Chapter 22: on a Windows computer
 - Lab of Chapter 24: with remoting
+- Lab of Chapter 25: on a Windows computer

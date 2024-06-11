@@ -954,6 +954,67 @@ Provide the `Select-String` Cmdlet with a regex `-Pattern`:
     0
     1
 
+# Error Handling
+
+Errors of the current session are stored in the `$Error` array, with the most
+recent error under index 0:
+
+    > 1 / 0
+    RuntimeException: Attempted to divide by zero.
+    > $Error[0]
+    RuntimeException: Attempted to divide by zero.
+
+The `$ErrorActionPreference` variable defines the behaviour when an error
+occurs:
+
+- `Continue` (default): display error and continue
+- `Break`: enter the debugger
+- `Ignore`: suppress the error (only applicable for single commands)
+- `Inquire`: displays the error and asks the user to continue or not
+- `SilentlyContinue`: continue without prompt
+- `Stop`: display the error and stop execution (enters exception handling)
+- `Suspend`: stop and resume after error inspection (only applicable for single
+  commands)
+
+There are two common parameters for error handling, which should be preferred
+over setting the session- or script-wide `$ErrorActionPreference` variable:
+
+1. `ErrorAction`: defines what should happen upon an error
+    - see possible values above for `$ErrorActionPreference`
+2. `ErrorVariable`: defines the variable to store the error in
+
+Store the error in the variable `$x`:
+
+    > Get-ChildItem -Path DoesNotExist -ErrorVariable x
+
+Append the error to the variable `$x`:
+
+    > Get-ChildItem -Path DoesNotExist -ErrorVariable +x
+
+Inspect the error and continue:
+
+    > Get-ChildItem -Path DoesNotExist -ErrorAction Inquire
+    [shows prompt on how to continue]
+
+Use `try`/`catch` with `-ErrorAction Stop`(!) for exception handling:
+
+    > try { Get-ChildItem -Path DoesNotExist -ErrorAction Stop } catch { Write-Host "error" }
+    error
+
+Exceptions can be dealt with individually based on their type:
+
+```pwsh
+try {
+    Some-Command -ErrorAction Stop
+} catch [Type1] {
+    # ...
+} catch [Type2] {
+    # ...
+} catch {
+    # ...
+}
+```
+
 # Miscellaneous
 
 - Powershell 5.1 is called "Windows PowerShell" and has the binary

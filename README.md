@@ -1024,6 +1024,67 @@ try {
 - ISE: Integrated Scripting Environment (host application), outdated; use Visual
   Studio Code with the PowerShell extension instead
 
+## Profiles
+
+A profile script, which is automatically executed as PowerShell loads, can be
+located under `$PSHOME/profile.ps1`.  Check out `Help About_Profile` for
+additional locations for a profile file. The currently loaded profile script is
+referred to by the variable `$PROFILE`.
+
+Add a function called `Prompt` to the profile script to modify the prompt:
+
+```pwsh
+function Prompt
+{
+    'PS ' + (Get-Location).ToString().Split('/')[-1] + 
+    $(if ($NestedPromptLevel -GE 1) { '>> ' } else { '> ' })
+}
+```
+
+## Operators
+
+Convert data types using `-as`:
+
+    > 10 / 3
+    3.33333333333333
+    > 10 / 3 -as [int]
+    3
+
+Check if an expression is of a type with `-is`:
+
+    > 10 / 3 -is [double]
+    True
+    > 10 + 3 -is [int]
+    True
+
+Replace text with regexes and `-replace`:
+
+    > "e32df0d9" -replace '[a-z]','_'
+    _32__0_9
+
+Convert between arrays and text using `-join` and `-split`:
+
+    > "a,b,c,d" -split ','
+    a
+    b
+    c
+    d
+    > {1,2,3,4,5} -join ','
+    1,2,3,4,5
+
+Perform wildcard string matching using `-like`:
+
+    > "liability" -like '*ability*'
+    True
+
+Check if an element is contained within a collection using `-contains` and `-in`
+(with opposite operand orders):
+
+    > 3 -in 1..5
+    True
+    > 1..5 -contains 3
+    True
+
 ## Recipies
 
 Compressing and uncompressing archives:

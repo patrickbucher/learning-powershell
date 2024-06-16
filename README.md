@@ -1085,6 +1085,18 @@ Check if an element is contained within a collection using `-contains` and `-in`
     > 1..5 -contains 3
     True
 
+## Default Parameter Values
+
+The `$PSDefaultParameterValues` variable is a hash map that stores parameter
+names (keys) and default values for them (values). The keys follow the structure
+`[Cmdlet]:[Parameter]`, e.g. `Get-ChildItem:Path`:
+
+    > $PSDefaultParameterValues.Add('Get-ChildItem:Path', '~/music')
+    > Get-ChildItem
+    [lists ~/music]
+
+Wildcards can be used, too. The value can also be a script block.
+
 ## Recipies
 
 Compressing and uncompressing archives:
